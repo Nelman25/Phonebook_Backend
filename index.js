@@ -3,9 +3,9 @@ const app = express();
 const morgan = require("morgan");
 
 app.use(express.json());
-app.use(morgan("tiny"));
 
 const date = new Date();
+
 let persons = [
 	{
 		id: "1",
@@ -38,6 +38,15 @@ const nameAlreadyExist = (name) => {
 	const names = [...persons.map((person) => person.name.trim().toLowerCase())];
 	return names.includes(name.toLowerCase().trim());
 };
+
+morgan.token("post-data", (req) => {
+	return req.method === "POST" ? JSON.stringify(req.body) : "";
+});
+app.use(
+	morgan(
+		":method :url :status :res[content-length] - :response-time ms :post-data"
+	)
+);
 
 app.get("/api/persons", (req, res) => {
 	res.json(persons);
