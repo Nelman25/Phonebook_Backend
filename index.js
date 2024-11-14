@@ -39,11 +39,6 @@ const generateId = () => {
   return String(randomId);
 };
 
-const nameAlreadyExist = (name) => {
-  const names = [...persons.map((person) => person.name.trim().toLowerCase())];
-  return names.includes(name.toLowerCase().trim());
-};
-
 morgan.token("post-data", (req) => {
   return req.method === "POST" ? JSON.stringify(req.body) : "";
 });
@@ -75,28 +70,34 @@ app.get("/api/persons/:id", (req, res) => {
   }
 });
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", async (req, res) => {
   const id = req.params.id;
-  persons = persons.filter((person) => person.id !== id);
+  const persons = await Note.find({});
+  persons.filter((person) => person.id !== id);
+
+  // persons = persons.filter((person) => person.id !== id);
 
   res.status(204).end();
 });
 
-app.post("/api/persons", (req, res) => {
-  // const body = req.body;
-  // if (!body.name || !body.number) {
-  //   return res.status(400).json({ error: "missing content" });
-  // }
-  // if (nameAlreadyExist(body.name)) {
-  //   return res.status(400).json({ error: "Name already exist." });
-  // }
-  // const person = {
-  //   name: body.name,
-  //   number: body.number,
-  //   id: generateId(),
-  // };
-  // persons = persons.concat(person);
-  // res.json(person);
+app.post("/api/persons", async (req, res) => {
+  const body = req.body;
+
+  if (!body.name || !body.number) {
+    return res.status(400).json({ error: "missing content" });
+  }
+
+  try {
+    const newPerson = new Person({
+      name: body.name,
+      number: body.number,
+    });
+
+    const savedPerson = await newPerson.save();
+    res.json(savedPerson);
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 const PORT = process.env.PORT || 3001;
