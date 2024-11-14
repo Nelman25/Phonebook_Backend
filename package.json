@@ -1,21 +1,25 @@
 {
-	"name": "part3fullstackopen",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"start": "node index.js",
-		"dev": "nodemon index.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"author": "Jonel Villaver",
-	"license": "MIT",
-	"dependencies": {
-		"express": "^4.21.0",
-		"mongoose": "^8.8.0",
-		"morgan": "^1.10.0"
-	},
-	"devDependencies": {
-		"nodemon": "^3.1.7"
-	}
+  "name": "part3fullstackopen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.jsx",
+    "dev": "nodemon index.js",
+    "test": "\"echo \\Error: no test specified\\\" && exit 1\"",
+    "build:ui": "rm -rf \"C:/Users/Jonel Villaver/Desktop/ProgrammingShits/part3fullstackopen/dist\" && cd \"C:/Users/Jonel Villaver/Desktop/programmingshits/fullstackopen/part2/phonebook\" && npm run build && cp -r dist \"C:/Users/Jonel Villaver/Desktop/ProgrammingShits/part3fullstackopen/\"",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+  },
+  "author": "Jonel Villaver",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "mongoose": "^8.8.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
 }
