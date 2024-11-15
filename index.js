@@ -1,13 +1,13 @@
 require("dotenv").config();
-const express = require("express");
-const app = express();
-const cors = require("cors");
-const morgan = require("morgan");
 const Person = require("./models/mongo");
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
+const app = express();
 
-app.use(express.json());
-app.use(cors());
 app.use(express.static("dist"));
+app.use(cors());
+app.use(express.json());
 
 const date = new Date();
 
@@ -54,21 +54,24 @@ app.get("/api/persons", (req, res) =>
 );
 
 app.get("/info", (req, res) => {
+  const contacts = Note.find({}).then((result) => result);
   res.send(
     `<p>Phonebook has info for ${persons.length} people</p><br><p>${date}</p>`
   );
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
-  const person = persons.find((person) => person.id === id);
-
-  if (person) {
-    res.json(person);
-  } else {
-    json.status(404).end();
-  }
+  Person.find(req.params.id).then((person) => {});
 });
+//   const id = req.params.id;
+//   const person = persons.find((person) => person.id === id);
+
+//   if (person) {
+//     res.json(person);
+//   } else {
+//     json.status(404).end();
+//   }
+// });
 
 app.delete("/api/persons/:id", async (req, res) => {
   const id = req.params.id;
@@ -80,7 +83,7 @@ app.delete("/api/persons/:id", async (req, res) => {
   res.status(204).end();
 });
 
-app.post("/api/persons", async (req, res) => {
+app.post("/api/persons", (req, res) => {
   const body = req.body;
 
   if (!body.name || !body.number) {
@@ -93,8 +96,9 @@ app.post("/api/persons", async (req, res) => {
       number: body.number,
     });
 
-    const savedPerson = await newPerson.save();
-    res.json(savedPerson);
+    newPerson.save().then((savedPerson) => {
+      res.json(savedPerson);
+    });
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }
